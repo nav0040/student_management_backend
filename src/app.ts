@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import studentRoutes from './routes/student.routes';
 import { errorHandler } from './middlewares/errorHandler';
+import { apiLimiter } from './middlewares/rateLimiter';
 
 const app: Application = express();
 
@@ -13,6 +14,9 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+
+// Apply rate limiting to all api routes
+app.use('/api', apiLimiter);
 
 app.use('/api/v1/students', studentRoutes);
 
