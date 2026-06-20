@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id        String   @id @default(uuid()) @db.Uuid
+  firstName String   @map("first_name") @db.VarChar(100)
+  lastName  String   @map("last_name") @db.VarChar(100)
+  email     String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  marks     Mark[]
+
+  @@map("students")
+}
+
+model Mark {
+  id        String   @id @default(uuid()) @db.Uuid
+  studentId String   @map("student_id") @db.Uuid
+  subject   String   @db.VarChar(100)
+  score     Int      @db.SmallInt
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("marks")
+  @@index([studentId])
+}
