@@ -134,6 +134,74 @@ The server will run on **`http://localhost:5000/api/v1`**.
 
 ---
 
+## 🚀 Testing the API on Postman
+
+To test and verify the REST API endpoints using Postman, configure your workspace as follows:
+
+### 1. Setup Configuration
+*   **Base URL**: `http://localhost:5000/api/v1`
+*   **Headers**: Add `Content-Type: application/json` for all request payloads.
+
+### 2. Endpoint Guide
+
+#### A. Create a Student
+*   **Method**: `POST`
+*   **URL**: `http://localhost:5000/api/v1/students`
+*   **Body** (raw JSON):
+    ```json
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com"
+    }
+    ```
+
+#### B. Get All Students (Paginated)
+*   **Method**: `GET`
+*   **URL**: `http://localhost:5000/api/v1/students?page=1&limit=8`
+
+#### C. Get Student by ID
+*   **Method**: `GET`
+*   **URL**: `http://localhost:5000/api/v1/students/{student_uuid}`
+
+#### D. Update Student Details
+*   **Method**: `PUT`
+*   **URL**: `http://localhost:5000/api/v1/students/{student_uuid}`
+*   **Body** (raw JSON):
+    ```json
+    {
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "email": "jane.doe@example.com"
+    }
+    ```
+
+#### E. Record Student Marks
+*   **Method**: `POST`
+*   **URL**: `http://localhost:5000/api/v1/students/{student_uuid}/marks`
+*   **Body** (raw JSON):
+    ```json
+    {
+      "subject": "Mathematics",
+      "score": 92
+    }
+    ```
+
+#### F. Delete Student (Triggers Cascade Delete)
+*   **Method**: `DELETE`
+*   **URL**: `http://localhost:5000/api/v1/students/{student_uuid}`
+
+### ⚠️ Security & Rate Limiter
+The backend has rate limiting enabled. Sending more than **100 requests in 15 minutes** from the same IP (e.g. during script testing or intense manual verification) will trigger a `429 Too Many Requests` error with the following payload:
+```json
+{
+  "status": "fail",
+  "message": "Too many requests from this IP. Please try again after 15 minutes."
+}
+```
+
+---
+
 ## 📝 Assumptions Made
 
 1.  **Unique Email Constraint**: Student email addresses are unique. Attempting to save a duplicate email returns a `409 Conflict` (or `400 Bad Request` validation error).
